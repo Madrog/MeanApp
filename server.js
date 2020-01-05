@@ -13,7 +13,17 @@ var mongoose = require('mongoose'); //for mongodb, database
 var models_user = require('./Angular/Models/user.js'); // refering models in server.js
 
 //connection database
-mongoose.connect('mongodb://localhost/AngularizeApp');
+//mongoose.connect('mongodb://localhost/AngularizeApp', { useNewUrlParser: true });
+
+mongoose
+.connect('mongodb://localhost/AngularizeApp', {
+useUnifiedTopology: true,
+useNewUrlParser: true,
+})
+.then(() => console.log('DB Connected!'))
+.catch(err => {
+console.log('DB Connection Error: ${err.message}');
+});
 
 //import the routers
 var router = require('./Routes/router');
@@ -30,7 +40,9 @@ app.set('view engine', 'ejs');
 app.use(cookieParser());
 app.use(logger('dev'));
 app.use(session({
-  secret: 'keyboard cat'
+  secret: 'keyboard cat',
+  resave: false,
+  saveUninitialized: true
 }));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
